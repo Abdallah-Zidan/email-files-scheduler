@@ -1,6 +1,6 @@
 "use strict";
 const config = require("./config");
-const runJob = require("./job");
+const {runJob}= require("./lib");
 
 console.log("mail scheduler application start");
 console.log("configuration:", {
