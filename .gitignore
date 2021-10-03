@@ -1,3 +1,5 @@
 .env
 files
 node_modules
+tracking-data/*
+email.config.json

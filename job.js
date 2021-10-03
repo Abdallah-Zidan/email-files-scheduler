@@ -16,47 +16,54 @@ async function run(config) {
   const sentFiles = [];
   const failedFiles = [];
 
-  //   const failedTracker = await getTracker(
-  //     config.failedEmailsTracker,
-  //     config.maxAttempts
-  //   );
+  const tracker = await getTracker(
+    config.failedEmailsTracker,
+    config.maxAttempts
+  );
 
   const onFailed = (file) => {
     failedFiles.push(file);
-    //failedTracker.incrementAttempts(file);
+    tracker.incrementAttempts(file);
+  };
+
+  const onSuccess = (file) => {
+    sentFiles.push(file);
+    tracker.send(file);
   };
 
   console.log("email job started");
   for (const file of files) {
-    // if (failedTracker.shouldAttempt(file)) {
-    const email = await extractEmailData(file);
-    if (email) {
-      console.log(email.attachments);
-      try {
-        const info = await sendMail(email);
-        console.log(
-          "Message sent",
-          JSON.stringify({
-            messageId: info.messageId,
-            accepted: info.accepted,
-          })
-        );
-        if (info.messageId) {
-          sentFiles.push(file);
-        } else onFailed(file);
-      } catch (error) {
-        if (error.code === "EAUTH") {
-          console.log(error);
-          break;
+    if (tracker.shouldAttempt(file)) {
+      const email = await extractEmailData(file);
+      if (email) {
+        console.log("attachments", email.attachments);
+        try {
+          const info = await sendMail(email);
+          console.log(
+            "Message sent",
+            JSON.stringify({
+              messageId: info.messageId,
+              accepted: info.accepted,
+            })
+          );
+          if (info.messageId) {
+            onSuccess(file);
+          } else onFailed(file);
+        } catch (error) {
+          if (error.code === "EAUTH") {
+            console.log(error);
+            onFailed(file);
+            break;
+          }
         }
-        onFailed(file);
       }
     }
   }
-  // }
+  if (config.removeSent) {
+    await removeSent(sentFiles);
+  }
 
-  await removeSent(sentFiles);
   console.log("email job finished");
-  // await failedTracker.save();
+  await tracker.save();
 }
 module.exports = run;

@@ -1,0 +1,16 @@
+{
+    "from": "",
+    "filesDir": "./files",
+    "failedEmailsTracker": "trackinng-data/tracked.json",
+    "maxAttempts": 5,
+    "port": 587,
+    "jobInterval": 3000,
+    "secure": false,
+    "removeSent": false,
+    "to": {
+        "support": [""],
+        "newSales": [""],
+        "complaint": [""],
+        "default": [""]
+    }
+}

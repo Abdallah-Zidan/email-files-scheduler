@@ -11,9 +11,11 @@ export interface IConfig {
   emailPort: number;
   emailSecure: boolean;
   emailFrom: string;
-  emailTo: string | string[];
+  emailTo: { [type: string]: string | string[] };
   emailFilesDir: string;
   maxAttempts: number;
   failedEmailsTracker: string;
   jobInterval: number;
+  removeSent: boolean;
+  getToAddresses: (subject: string) => string | string[];
 }
