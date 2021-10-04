@@ -10,18 +10,23 @@ console.log("configuration:", {
 
 async function appStart() {
   let shouldRun = true;
-  const attachmentGetter = await filePathGetter(config.attachments);
-  setInterval(async () => {
-    if (shouldRun) {
-      shouldRun = false;
-      try {
-        await runJob(config, attachmentGetter);
-      } catch (error) {
-        console.log(error);
-      }
+  try {
+    const attachmentGetter = await filePathGetter(config.attachments);
+    setInterval(async () => {
+      if (shouldRun) {
+        shouldRun = false;
+        try {
+          await runJob(config, attachmentGetter);
+        } catch (error) {
+          console.log(error);
+        }
 
-      shouldRun = true;
-    }
-  }, config.jobInterval);
+        shouldRun = true;
+      }
+    }, config.jobInterval);
+  } catch (error) {
+    console.log(error);
+    process.exit(1);
+  }
 }
 appStart().catch(console.error);
