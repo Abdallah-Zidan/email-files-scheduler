@@ -2,6 +2,7 @@ export interface IEmail {
   subject: string;
   content: string;
   cc?: string;
+  attachments?: { path: string; filename: string }[];
 }
 
 export interface IConfig {
