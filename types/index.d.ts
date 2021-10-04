@@ -17,5 +17,14 @@ export interface IConfig {
   failedEmailsTracker: string;
   jobInterval: number;
   removeSent: boolean;
+  attachments: {
+    connURL: string;
+    dbName: string;
+    collName: string;
+  };
   getToAddresses: (subject: string) => string | string[];
 }
+
+export type AttachmentGetter = (
+  fileId: string
+) => Promise<{ path: string; filename: string }>;

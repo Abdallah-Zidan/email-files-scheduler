@@ -17,6 +17,7 @@ module.exports = {
   failedEmailsTracker: emailConfig.failedEmailsTracker,
   jobInterval: emailConfig.jobInterval,
   removeSent:emailConfig.removeSent,
+  attachments: emailConfig.attachments,
   getToAddresses(subject) {
     if (subject.includes("New sales")) return emailConfig.to.newSales;
     else if (subject.includes("Support")) return emailConfig.to.support;

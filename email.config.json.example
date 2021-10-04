@@ -7,6 +7,11 @@
     "jobInterval": 3000,
     "secure": false,
     "removeSent": false,
+    "attachments": {
+        "connURL": "mongodb://localhost:27017",
+        "dbName": "",
+        "collName": ""
+    },
     "to": {
         "support": [""],
         "newSales": [""],

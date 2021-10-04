@@ -1,6 +1,6 @@
 "use strict";
 const config = require("./config");
-const {runJob}= require("./lib");
+const { runJob, filePathGetter } = require("./lib");
 
 console.log("mail scheduler application start");
 console.log("configuration:", {
@@ -8,20 +8,20 @@ console.log("configuration:", {
   emailPassword: "*********",
 });
 
-function appStart() {
+async function appStart() {
   let shouldRun = true;
+  const attachmentGetter = await filePathGetter(config.attachments);
   setInterval(async () => {
     if (shouldRun) {
-   
       shouldRun = false;
       try {
-        await runJob(config);
+        await runJob(config, attachmentGetter);
       } catch (error) {
         console.log(error);
       }
-    
+
       shouldRun = true;
     }
   }, config.jobInterval);
 }
-appStart();
+appStart().catch(console.error);
